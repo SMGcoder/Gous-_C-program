@@ -1,7 +1,8 @@
+#include <stdio.h>
 #include <stdlib.h>
 
 int main() {
-    int choice;
+    int choice, failed_subjects;
     float m1, m2, m3, total, avg;
     char continue_choice;
 
@@ -10,7 +11,7 @@ int main() {
     printf("\t=========================================\n");
     printf("\t      STUDENT RESULT MANAGEMENT SYSTEM   \n");
     printf("\t=========================================\n");
-    printf("\t [1] Calculate Total and Average Marks\n");
+    printf("\t [1] Calculate Total, Average & Status\n");
     printf("\t [2] Determine Student Grade\n");
     printf("\t [3] Check Pass/Fail Result Status\n");
     printf("\t [4] Exit Program\n");
@@ -18,44 +19,52 @@ int main() {
     printf(" Enter your choice (1 to 4): ");
 
     if (scanf("%d", &choice) != 1) {
-        printf("\n[Error] Invalid input! Please enter a valid integer.\n");
-        while(getchar() != '\n'); // Clear input buffer
+        printf("\n[Error] Invalid input! Please enter a number from 1 to 4.\n");
+        while (getchar() != '\n');
         goto main_menu;
     }
 
     switch (choice) {
         case 1:
-            printf("\n--- [1] Total & Average Calculation ---\n");
-            printf("Enter marks for 3 subjects (out of 100): ");
+        case 3:
+            printf("\n--- [%d] Student Result Summary ---\n", choice);
+            printf("Enter marks for 3 subjects (0 to 100): ");
             if (scanf("%f %f %f", &m1, &m2, &m3) != 3) {
-                printf("[Error] Please enter valid numbers for marks.\n");
-                while(getchar() != '\n');
+                printf("[Error] Please enter 3 valid numbers.\n");
+                while (getchar() != '\n');
                 break;
             }
 
             if (m1 < 0 || m1 > 100 || m2 < 0 || m2 > 100 || m3 < 0 || m3 > 100) {
-                printf("[Error] Marks must be between 0 and 100.\n");
+                printf("[Error] All marks must be between 0 and 100.\n");
             } else {
+                failed_subjects = (m1 < 40) + (m2 < 40) + (m3 < 40);
                 total = m1 + m2 + m3;
                 avg = total / 3.0;
+
                 printf("-----------------------------------------\n");
                 printf(" Total Marks   : %.2f / 300\n", total);
                 printf(" Average Marks : %.2f%%\n", avg);
+                if (failed_subjects > 0) {
+                    printf(" Status        : FAIL (%d subject(s) below 40)\n", failed_subjects);
+                } else {
+                    printf(" Status        : PASS\n");
+                }
                 printf("-----------------------------------------\n");
             }
             break;
 
         case 2:
             printf("\n--- [2] Grade Determination ---\n");
-            printf("Enter average percentage: ");
+            printf("Enter average percentage (0 to 100): ");
             if (scanf("%f", &avg) != 1) {
                 printf("[Error] Invalid percentage input.\n");
-                while(getchar() != '\n');
+                while (getchar() != '\n');
                 break;
             }
 
             if (avg < 0 || avg > 100) {
-                printf("[Error] Invalid percentage entered (0 - 100).\n");
+                printf("[Error] Percentage must be between 0 and 100.\n");
             } else {
                 printf("-----------------------------------------\n");
                 if (avg >= 85) {
@@ -73,24 +82,6 @@ int main() {
                 }
                 printf("-----------------------------------------\n");
             }
-            break;
-
-        case 3:
-            printf("\n--- [3] Pass/Fail Result Status ---\n");
-            printf("Enter marks for 3 subjects: ");
-            if (scanf("%f %f %f", &m1, &m2, &m3) != 3) {
-                printf("[Error] Invalid marks input.\n");
-                while(getchar() != '\n');
-                break;
-            }
-
-            printf("-----------------------------------------\n");
-            if (m1 < 40 || m2 < 40 || m3 < 40) {
-                printf(" Result: FAIL (Scored below passing mark 40 in one or more subjects)\n");
-            } else {
-                printf(" Result: PASS\n");
-            }
-            printf("-----------------------------------------\n");
             break;
 
         case 4:
